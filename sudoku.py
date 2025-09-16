@@ -3,6 +3,10 @@
 """
 Sudoku
 
+/ᐠ > ˕ <マ ₊˚⊹♡
+
+Made by @literal-gargoyle
+
 Controls
   Arrow keys .. Move cursor
   1-9 ......... Enter digit
@@ -333,11 +337,11 @@ def show_settings(stdscr, settings: Dict[str, Any]) -> bool:
         ch = stdscr.getch()
         if ch in (ord('q'), ord('Q')):
             break
-        elif ch in (curses.KEY_UP, ord('k')):
+        elif ch in (curses.KEY_UP):
             sel = (sel - 1) % len(opts)
-        elif ch in (curses.KEY_DOWN, ord('j')):
+        elif ch in (curses.KEY_DOWN):
             sel = (sel + 1) % len(opts)
-        elif ch in (curses.KEY_LEFT, ord('h')):
+        elif ch in (curses.KEY_LEFT):
             changed = True
             if sel == 0:
                 themes = ["classic","high_contrast","green","blue"]
@@ -392,16 +396,16 @@ class Game:
             ch = self.stdscr.getch()
             if ch in (ord('q'), ord('Q')):
                 break
-            elif ch in (curses.KEY_LEFT, ord('h')):
+            elif ch in (curses.KEY_LEFT):
                 cur_r, cur_c = self.ui.cursor
                 self.ui.cursor = (cur_r, (cur_c-1)%9)
-            elif ch in (curses.KEY_RIGHT, ord('l')):
+            elif ch in (curses.KEY_RIGHT):
                 cur_r, cur_c = self.ui.cursor
                 self.ui.cursor = (cur_r, (cur_c+1)%9)
-            elif ch in (curses.KEY_UP, ord('k')):
+            elif ch in (curses.KEY_UP):
                 cur_r, cur_c = self.ui.cursor
                 self.ui.cursor = ((cur_r-1)%9, cur_c)
-            elif ch in (curses.KEY_DOWN, ord('j')):
+            elif ch in (curses.KEY_DOWN):
                 cur_r, cur_c = self.ui.cursor
                 self.ui.cursor = ((cur_r+1)%9, cur_c)
             elif ch in (ord('n'), ord('N')):
