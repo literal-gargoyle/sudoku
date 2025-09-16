@@ -337,9 +337,10 @@ def show_settings(stdscr, settings: Dict[str, Any]) -> bool:
         ch = stdscr.getch()
         if ch in (ord('q'), ord('Q')):
             break
-        elif ch in (curses.KEY_UP):
+        elif ch in (curses.KEY_UP,):
+            # Im so fucking retarded bro
             sel = (sel - 1) % len(opts)
-        elif ch in (curses.KEY_DOWN):
+        elif ch in (curses.KEY_DOWN,):
             sel = (sel + 1) % len(opts)
         elif ch in (curses.KEY_LEFT):
             changed = True
@@ -396,16 +397,16 @@ class Game:
             ch = self.stdscr.getch()
             if ch in (ord('q'), ord('Q')):
                 break
-            elif ch in (curses.KEY_LEFT):
+            elif ch in (curses.KEY_LEFT,):
                 cur_r, cur_c = self.ui.cursor
                 self.ui.cursor = (cur_r, (cur_c-1)%9)
-            elif ch in (curses.KEY_RIGHT):
+            elif ch in (curses.KEY_RIGHT,):
                 cur_r, cur_c = self.ui.cursor
                 self.ui.cursor = (cur_r, (cur_c+1)%9)
-            elif ch in (curses.KEY_UP):
+            elif ch in (curses.KEY_UP,):
                 cur_r, cur_c = self.ui.cursor
                 self.ui.cursor = ((cur_r-1)%9, cur_c)
-            elif ch in (curses.KEY_DOWN):
+            elif ch in (curses.KEY_DOWN,):
                 cur_r, cur_c = self.ui.cursor
                 self.ui.cursor = ((cur_r+1)%9, cur_c)
             elif ch in (ord('n'), ord('N')):
@@ -449,18 +450,22 @@ class Game:
             # ignore others
 
     def hint(self):
+        #Updated hint function, no longer just chooses the first option, finds all, then chooses one a random
         if not self.settings.get('show_hints', True):
             self.ui.status_msg = "Hints are disabled in Settings."
             return
-        # Find a cell to fill
-        for r in range(9):
-            for c in range(9):
-                cell = self.state.grid[r][c]
-                if not cell.fixed and cell.value == 0:
-                    cell.pencil = self.state.solution[r][c]
-                    self.ui.status_msg = f"Hint: try {cell.pencil} at ({r+1},{c+1})"
-                    self.ui.cursor = (r, c)
-                    return
+        # Collect all available cells
+        available_cells = [
+            (r, c) for r in range(9) for c in range(9)
+            if not self.state.grid[r][c].fixed and self.state.grid[r][c].value == 0
+        ]
+        if available_cells:
+            r, c = random.choice(available_cells)
+            cell = self.state.grid[r][c]
+            cell.pencil = self.state.solution[r][c]
+            self.ui.status_msg = f"Hint: try {cell.pencil} at ({r+1},{c+1})"
+            self.ui.cursor = (r, c)
+            return
         self.ui.status_msg = "No hints: puzzle already complete!"
 
 # ------------------------------------------------------------
